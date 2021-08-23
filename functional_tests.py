@@ -43,22 +43,29 @@ class NewVisitorTest(unittest.TestCase):
 
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == '1: Buy peacock feathers' for row in rows),
-            "New list item did not appear in the table"
-        )
+        self.assertIn('1: Buy peacock feathers', [row.text for row in rows])
 
         # The text box still prompts her to add another item.
         # She introduces "Make a Peacock Feather Fly"
         # (Edith is very methodical)
-
-        self.fail('Finish test!')
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Make a fly from peacock feathers')
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
 
         # The page refreshes again, and now shows both elements of its list
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn('1: Buy peacock feathers', [row.text for row in rows])
+        self.assertIn(
+            '2: Make a fly from peacock feathers',
+            [row.text for row in rows]
+        )
 
         # Edith wonders if the site will remember her list. Then she sees that
         # the site generated a unique URL for it - about this
         # displays a short text with explanations.
+        self.fail('Finish test!')
 
         # She visits that URL - her list is still there.
 
